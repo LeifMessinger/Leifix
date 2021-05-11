@@ -56,16 +56,17 @@
 			
 			let operatorDictionary = {
 				"+": function(a,b){
-					},
+					return a + b;
+				},
 				"-": function(a,b){
-					},
+					return a - b;
+				},
 				"*": function(a,b){
-					},
+					return a * b;
+				},
 				"/": function(a,b){
+					return a / b;
 				}
-			};
-			function operate(operator,a,b){
-				return operatorDictionary[operator](a,b);
 			}
 			function print(str){	//Might not be a perfect html print, but it works
 				let line = document.createElement("line");
@@ -85,13 +86,19 @@
 				println(equation.value);
 				println("Word number. Current word\tOperator stack\tVariable queue-stack-list");
 				let words = equation.value.split(" ").filter(word => word!="");
-				
 				let variables = [];
 				let operators = [];
 				function printStats(){
 					//HTML text content can't tab, so just live with it
 					//And no I'm not using a textarea. I'm starting to hold a little grudge against them.
 					println("\t" + JSON.stringify(operators) + "\t" + JSON.stringify(variables));
+				}
+				function operate(operator,a,b){	//Given 3 strings
+					println("\"" + operator + "\" has what it needs, the " + a + " and the " + b);
+					println("It takes those off the queue and it opearates");
+					const ret = operatorDictionary[operator](parseFloat(a),parseFloat(b));
+					println("It returns " + ret + " that gets unshifted back onto the queue");
+					return ret;
 				}
 				for(let i = 0; i < words.length; i++){
 					const word = words[i];
@@ -104,7 +111,9 @@
 							const operator = operators[0];
 							if(variables.length >= 2){
 								//That operator has what it needs
-								println("\"" + operator + "\" doesn't have what it needs");
+								const ret = operate(operators.pop(),variables.shift(),variables.shift());
+								variables.unshift(ret);
+								printStats();
 							}else{
 								//That operator doesn't have what it needs
 								println("\"" + operator + "\" doesn't have what it needs");
@@ -120,7 +129,11 @@
 						const operator = word;
 						if(variables.length >= 2){
 							//That operator has what it needs
-							println("\"" + operator + "\" doesn't have what it needs");
+							let removedVars = variables.splice(variables.length-2,2);
+							const ret = operate(operators.pop(),removedVars.shift(),removedVars.shift());
+							//It pops and pushes because the operator is late to the party and needs the the last things added
+							variables.push(ret);
+							printStats();
 						}else{
 							//That operator doesn't have what it needs
 							println("\"" + operator + "\" doesn't have what it needs");
