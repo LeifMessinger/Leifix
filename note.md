@@ -58,6 +58,8 @@ And here's how this would be done
 * If an operator is infix, pop the last variable off the stack and into the operator's variable queue. This is fine because if there were any operators before it, they would have taken that variable. Then push it to the operator stack.
 * If an operator is prefix, just push it to the operator stack.
 
+Now that I am implementing it, I realized that I can just feed the infix and postfix operators the same because they are functionally the same and for the reason I listed above.
+
 It works perfectly except for these downfalls
 
 1. There's no precedence, just right to left except for prefix and postfix operators having to wait for computed values.
