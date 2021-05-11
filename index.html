@@ -91,9 +91,9 @@
 					variables.push();
 				}
 				operate(){	//Given 3 strings
-					println("\tOperator \"" + this.symbol + "\" took " + this.variables.slice(0,this.variables.length-1).join(",") + " and the " + this.variables[this.variables.length-1]);
+					println("\tOperator " + this.symbol + " took " + this.variables.slice(0,this.variables.length-1).join(",") + " and the " + this.variables[this.variables.length-1]);
 					const ret = this.operation(...this.variables.map(parseFloat));
-					println("\tIt returns " + ret + " that gets unshifted back onto the queue");
+					println("\tIt returns " + ret + " that gets pushed back onto the stack");
 					return ret;
 				}
 			}
@@ -129,12 +129,12 @@
 						const hunger = 2 - operators[operators.length - 1].variables.length;
 
 						if(hunger == 0){
-							variables.push(operators[operators.length - 1].operate());	//Could be unshift, idk I'm an idiot
+							variables.push(operators[operators.length - 1].operate());
 							operators.pop();
 							printStats();
 						}else if(hunger >= 1 && variables.length >= 1){
 							const removedVars = variables.splice(variables.length-hunger,hunger);
-							println("\tOperator" + operators[operators.length - 1].symbol + " absorbed " + JSON.stringify(removedVars)); 
+							println("\tOperator " + operators[operators.length - 1].symbol + " absorbed " + JSON.stringify(removedVars)); 
 							operators[operators.length - 1].variables = operators[operators.length - 1].variables.concat(removedVars);      //This is genius
 							printStats();
 						}else{
