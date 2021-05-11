@@ -40,7 +40,7 @@
 
 	<body>
 		<div class="equation background">
-			<input id="equation" class="equation text" type="text" placeholder="7 5 6 - *" pattern="[\+\-\*\/\d\s]+"></input>
+			<input id="equation" class="equation text" type="text" autocomplete="off" placeholder="7 5 6 - *" pattern="[\+\-\*\/\d\s]+"></input>
 		</div>
 		<br/>
 		<div class="display background">
@@ -82,13 +82,15 @@
 			function run(e){
 				display.innerHTML = "";	//Clear display
 				println(equation.value);
-				println("Word number. Current word\tOperator stack\tVariableQueue");
+				println("Word number. Current word\tOperator stack\tVariable queue-stack-list");
 				let words = equation.value.split(" ").filter(word => word!="");
 				
 				let variables = [];
 				let operators = [];
 				function printStats(){
-					println("\t" + operators.toString() + "\t" + variables.toString());
+					//HTML text content can't tab, so just live with it
+					//And no I'm not using a textarea. I'm starting to hold a little grudge against them.
+					println("\t" + JSON.stringify(operators) + "\t" + JSON.stringify(variables));
 				}
 				for(let i = 0; i < words.length; i++){
 					const word = words[i];
@@ -101,27 +103,29 @@
 							const operator = operators[0];
 							if(variables.length >= 2){
 								//That operator has what it needs
-								println("\"" + operator + "\"doesn't have what it needs");
+								println("\"" + operator + "\" doesn't have what it needs");
 							}else{
 								//That operator doesn't have what it needs
-								println("\"" + operator + "\"doesn't have what it needs");
+								println("\"" + operator + "\" doesn't have what it needs");
 							}
 						}else{
 							prinln("\tThere are no operators to operate with");
 						}
 					}else{
 						//word is an operator
+						console.assert(operatorDictionary[word] != undefined);
 						operators.push(word);
 						printStats();
 						const operator = word;
 						if(variables.length >= 2){
 							//That operator has what it needs
-							println("\"" + operator + "\"doesn't have what it needs");
+							println("\"" + operator + "\" doesn't have what it needs");
 						}else{
 							//That operator doesn't have what it needs
-							println("\"" + operator + "\"doesn't have what it needs");
+							println("\"" + operator + "\" doesn't have what it needs");
 						}
 					}
+					newLine();
 				}
 			}
 			equation.onchange = run;
