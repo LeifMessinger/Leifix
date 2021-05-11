@@ -50,7 +50,81 @@
 		</div>
 		<!--<script src="script.js"></script> Still don't work-->
 		<script>
-			console.log("bruh");
+			const equation = document.getElementById("equation");	//equation.value
+			const display = document.querySelector(".display.text");	//display.textContent
+			
+			let operatorDictionary = {
+				"+": function(a,b){
+					},
+				"-": function(a,b){
+					},
+				"*": function(a,b){
+					},
+				"/": function(a,b){
+				}
+			};
+			function operate(operator,a,b){
+				return operatorDictionary[operator](a,b);
+			}
+			function print(str){	//Might not be a perfect html print, but it works
+				let line = document.createElement("line");
+				line.textContent = str;
+				display.appendChild(line);
+			}
+			function newLine(){
+				let lineBreak = document.createElement("br");
+				display.appendChild(lineBreak);
+			}
+			function println(str){
+				print(str);
+				newLine();
+			}
+			function run(e){
+				display.innerHTML = "";	//Clear display
+				println(equation.value);
+				println("Word number. Current word\tOperator stack\tVariableQueue");
+				let words = equation.value.split(" ").filter(word => word!="");
+				
+				let variables = [];
+				let operators = [];
+				function printStats(){
+					println("\t" + operators.toString() + "\t" + variables.toString());
+				}
+				for(let i = 0; i < words.length; i++){
+					const word = words[i];
+					print(i + ". '" + word + "'");
+					if(!isNaN(word)){	// || word[0] == '"'){
+						//word is a variable
+						variables.push(word);	//There's more than one variable
+						printStats();
+						if(operators.length >= 1){	//There's at least one operator
+							const operator = operators[0];
+							if(variables.length >= 2){
+								//That operator has what it needs
+								println("\"" + operator + "\"doesn't have what it needs");
+							}else{
+								//That operator doesn't have what it needs
+								println("\"" + operator + "\"doesn't have what it needs");
+							}
+						}else{
+							prinln("\tThere are no operators to operate with");
+						}
+					}else{
+						//word is an operator
+						operators.push(word);
+						printStats();
+						const operator = word;
+						if(variables.length >= 2){
+							//That operator has what it needs
+							println("\"" + operator + "\"doesn't have what it needs");
+						}else{
+							//That operator doesn't have what it needs
+							println("\"" + operator + "\"doesn't have what it needs");
+						}
+					}
+				}
+			}
+			equation.onchange = run;
 		</script>
 	</body>
 </html>
